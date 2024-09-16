@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get("/", protectRoute, getAllRooms);
 router.get("/:id", protectRoute, getRoom);
-router.post("/send/:id", protectRoute, setRoom);
+router.post("/", protectRoute, setRoom);
 
 export default router;

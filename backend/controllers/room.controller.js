@@ -1,9 +1,9 @@
 import Room from "../models/room.model.js";
-//import { getReceiverSocketId, io } from "../socket/socket.js";
+import { broadcastRoomUpdate } from "../socket/socket.js";
 
 export const getAllRooms = async (req, res) =>{
 	try {
-		const allRooms = await Room.find({}).toArray();
+		const allRooms = await Room.find({});
 
 		res.status(200).json(allRooms);
 	} catch (error) {
@@ -13,33 +13,24 @@ export const getAllRooms = async (req, res) =>{
 };
 
 
-
 export const setRoom = async (req, res) => {
 	try {
 		const { roomName } = req.body;
-		//const { id: roomId } = req.params;
-		//const senderId = req.user._id;
-        const senderId = req.params;
+		const senderId = req.user._id || req.params.senderId;;
+		let room = await Room.findOne({roomName});
 
-		let room = await Room.findOne(roomId);
+		if (!room) {
+			room = await Room.create({
+		 		participants: [senderId],
+                 roomName: roomName
+		 	});
+		}
 
-		// if (!room) {
-		// 	room = await Room.create({
-		// 		participants: [senderId],
-        //         roomName: roomName
-		// 	});
-		// }
+		await room.save();
 
-		// await room.save();
+		broadcastRoomUpdate(room); //Socket.io - refresh the list of rooms
 
-		// SOCKET IO FUNCTIONALITY WILL GO HERE
-		// const receiverSocketId = getReceiverSocketId(receiverId);
-		// if (receiverSocketId) {
-		// 	// io.to(<socket_id>).emit() used to send events to specific client
-		// 	io.to(receiverSocketId).emit("newMessage", newMessage);
-		// }
-
-		//res.status(201).json(newMessage);
+		res.status(201).json(room);
 	} catch (error) {
 		console.log("Error in room controller: ", error.message);
 		res.status(500).json({ error: "Internal server error" });
