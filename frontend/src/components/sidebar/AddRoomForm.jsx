@@ -39,7 +39,7 @@ const AddRoom = ({ onRoomAdded }) => {
         <form onSubmit={handleAddRoom}  className='flex items-center gap-2'>
             <input
                 type="text"
-                placeholder="Enter room name"
+                placeholder="Add a room name"
                 value={roomName}
                 onChange={(e) => setRoomName(e.target.value)}
                 className='input input-bordered rounded-full'

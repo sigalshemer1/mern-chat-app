@@ -4,9 +4,10 @@ import LogoutButton from "./LogoutButton";
 import SearchInput from "./SearchInput";
 import AddRoomForm from "./AddRoomForm";  // Assume this is the "rooms" related content
 import ToggleSideBar from "./ToggleSideBar";
+import useUIStore from "../../zustand/useUIStore";
 
 const Sidebar = () => {
-    const [selectedTab, setSelectedTab] = useState("chats"); // Default to "chats"
+	const { selectedTab, setSelectedTab } = useUIStore();
 
     // Callback to handle the value from ToggleSideBar
     const handleToggle = (value) => {
@@ -15,7 +16,6 @@ const Sidebar = () => {
 
     return (
         <div className='border-r border-slate-500 p-4 flex flex-col'>
-            {/* ToggleSideBar receives the callback */}
             <ToggleSideBar onToggle={handleToggle} />
             <div className='divider px-3'></div>
 
