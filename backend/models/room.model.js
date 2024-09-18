@@ -12,7 +12,7 @@ const roomSchema = new mongoose.Schema(
 				ref: "User",
 			},
 		],
-		messages: [
+		messagesRoom: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "Message",

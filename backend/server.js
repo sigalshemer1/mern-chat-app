@@ -7,7 +7,7 @@ import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import roomRoutes from "./routes/room.routes.js"; //ROOMS ROUTE
-//import messageRoomsRoutes from "./routes/messageRooms.routes.js";//MESSAGES OF ROOMS ROUTE
+import messageRoomRoutes from "./routes/messageRoom.routes.js";//MESSAGES OF ROOMS ROUTE
 
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import { app, server } from "./socket/socket.js";
@@ -23,6 +23,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/messageRoom", messageRoomRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/room", roomRoutes);//ROOM ROUTE
 //app.use("/api/messageRooms", messageRoomsRoutes);//MESSAGES OF ROOMS ROUTE

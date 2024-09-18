@@ -20,13 +20,15 @@ export const getReceiverSocketId = (receiverId) => {
 
 // Function to broadcast room updates
 export const broadcastRoomUpdate = (room) => {
-	console.log('Broadcasting room update:', room); // Add this line
     io.emit("roomAdded", room); // Emit the 'roomAdded' event with room data
 };
 
-io.on("connection", (socket) => {
-    console.log("a user connected", socket.id);
+// Function to broadcast room messages update
+export const broadcastRoomMessagesUpdate = (room) => {
+    io.emit("roomMessagesAdded", room); // Emit the 'roomAdded' event with room data
+};
 
+io.on("connection", (socket) => {
     const userId = socket.handshake.query.userId;
     if (userId !== "undefined") userSocketMap[userId] = socket.id;
 

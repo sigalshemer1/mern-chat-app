@@ -12,7 +12,7 @@ const messageRoomSchema = new mongoose.Schema(
 			ref: "room",
 			required: true,
 		},
-		message: {
+		messageRoom: {
 			type: String,
 			required: true,
 		},

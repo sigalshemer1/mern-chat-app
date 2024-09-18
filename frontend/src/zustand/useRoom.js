@@ -3,8 +3,8 @@ import { create } from "zustand";
 const useRoom = create((set) => ({
 	selectedRoom: null,
 	setSelectedRoom: (selectedRoom) => set({ selectedRoom }),
-	messagesRoom: [],
-	setMessagesRoom: (messagesRoom) => set({ messagesRoom }),
+	messagesRooms: [],
+	setMessagesRoom: (messagesRooms) => set({ messagesRooms }),
 }));
 
 export default useRoom;

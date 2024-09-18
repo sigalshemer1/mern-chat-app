@@ -4,6 +4,8 @@ import useRoom from "../../zustand/useRoom";
 import useUIStore from "../../zustand/useUIStore";
 import MessageInput from "./MessageInput";
 import Messages from "./Messages";
+import MessageRoomInput from "./MessageRoomInput";
+import MessagesRoom from "./MessagesRoom";
 import { TiMessages } from "react-icons/ti";
 import { useAuthContext } from "../../context/AuthContext";
 
@@ -24,7 +26,14 @@ const MessageContainer = () => {
         <div className='md:min-w-[450px] flex flex-col'>
            {selectedTab === "rooms" ? (
                 selectedRoom ? (
-                    <RoomContainer room={selectedRoom} />
+                    <>
+                    <div className='bg-slate-500 px-4 py-2 mb-2'>
+                        <span className='label-text'>Room:</span>{" "}
+                        <span className='text-gray-900 font-bold'>{selectedRoom.roomName}</span>
+                    </div>
+                    <MessagesRoom />
+                    <MessageRoomInput />
+                    </>
                 ) : (
                     <NoRoomSelected />
                 )
@@ -71,29 +80,4 @@ const NoRoomSelected = () => {
             </div>
         </div>
     );
-};
-
-const RoomContainer = ({ room }) => {
-    return (
-        <div className='md:min-w-[450px] flex flex-col'>
-            {/* Room Header */}
-            <div className='bg-blue-500 px-4 py-2 mb-2'>
-                <span className='label-text'>Room:</span>{" "}
-                <span className='text-gray-900 font-bold'>{room.name}</span>
-            </div>
-            {/* Add the room-specific content here */}
-            <RoomMessages roomId={room.id} />
-            <RoomMessageInput roomId={room.id} />
-        </div>
-    );
-};
-
-const RoomMessages = ({ roomId }) => {
-    // Placeholder for the room's messages logic
-    return <div className='flex-grow overflow-y-auto'>Room Messages for {roomId}</div>;
-};
-
-const RoomMessageInput = ({ roomId }) => {
-    // Placeholder for the room's message input logic
-    return <div>Room Message Input for {roomId}</div>;
 };

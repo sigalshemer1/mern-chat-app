@@ -1,7 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import React from 'react';
-import { FaUserGroup } from "react-icons/fa6";
+import { IoAddCircle } from "react-icons/io5";
 
 const AddRoom = ({ onRoomAdded }) => {
     const [roomName, setRoomName] = useState("");
@@ -21,22 +21,23 @@ const AddRoom = ({ onRoomAdded }) => {
                 },
                 body: JSON.stringify({ roomName: roomName }),
             });
-            
+
             const data = await res.json();
+
             if (data.error) {
                 throw new Error(data.error);
             }
 
-            toast.success("Room created successfully!");
             onRoomAdded(data); // Notify parent component about the new room
             setRoomName("");   // Clear input field
+            
         } catch (error) {
             toast.error(error.message);
         }
     };
 
     return (
-        <form onSubmit={handleAddRoom}  className='flex items-center gap-2'>
+        <form onSubmit={handleAddRoom} className='flex items-center gap-2'>
             <input
                 type="text"
                 placeholder="Add a room name"
@@ -45,9 +46,8 @@ const AddRoom = ({ onRoomAdded }) => {
                 className='input input-bordered rounded-full'
             />
             <button type='submit' className='btn btn-circle'>
-                <FaUserGroup color="#0ea5e9" type="submit" className="w-6 h-6 outline-none" />
-			</button>
-            
+                <IoAddCircle color="#0ea5e9" type="submit" className="w-6 h-6 outline-none" />
+            </button>
         </form>
     );
 };

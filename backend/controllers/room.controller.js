@@ -45,7 +45,7 @@ export const getRoom = async (req, res) => {
 
 		if (!room) return res.status(200).json([]);
 
-		const messagesRoom = room.messages;
+		const messagesRoom = room.messagesRoom;
 
 		res.status(200).json(messagesRoom);
 	} catch (error) {

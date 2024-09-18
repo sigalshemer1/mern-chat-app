@@ -1,42 +1,38 @@
 import Room from "../models/room.model.js";
 import MessageRoom from "../models/messageRoom.model.js";
-import { getReceiverSocketId, io } from "../socket/socket.js";
+import { broadcastRoomMessagesUpdate, io } from "../socket/socket.js";
 
 export const sendMessageRoom = async (req, res) => {
 	try {
-		const { message } = req.body;
+		const { messageRoom } = req.body;
 		const { id: roomId } = req.params;
 		const senderId = req.user._id;
 
 		let room = await Room.findOne({
-			participants: { $all: [senderId, roomId] },
+			participants: { $all: [senderId] },
 		});
 
 		if (!room) {
 			room = await Room.create({
-				participants: [senderId, roomId],
+				participants: [senderId],
 			});
 		}
 
 		const newMessageRoom = new MessageRoom({
 			senderId,
 			roomId,
-			message,
+			messageRoom,
 		});
 
 		if (newMessageRoom) {
-			room.messages.push(newMessageRoom._id);
+			room.messagesRoom.push(newMessageRoom._id);
 		}
 
 		// this will run in parallel
 		await Promise.all([room.save(), newMessageRoom.save()]);
 
-		// SOCKET IO FUNCTIONALITY WILL GO HERE
-		//  const receiverSocketId = getReceiverSocketId(receiverId);
-		//  if (receiverSocketId) {
-		// 	io.to(<socket_id>).emit() used to send events to specific client
-		//  	io.emit("newMessage", newMessage);
-		// }
+		// SOCKET IO FUNCTIONALITY To update all users with the new messages of the room
+		broadcastRoomMessagesUpdate(room); 
 
 		res.status(201).json(newMessageRoom);
 	} catch (error) {

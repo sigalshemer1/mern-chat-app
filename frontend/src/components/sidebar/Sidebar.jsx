@@ -2,7 +2,7 @@ import { useState } from "react";
 import Conversations from "./Conversations";
 import LogoutButton from "./LogoutButton";
 import SearchInput from "./SearchInput";
-import AddRoomForm from "./AddRoomForm";  // Assume this is the "rooms" related content
+import RoomList from "./RoomList";
 import ToggleSideBar from "./ToggleSideBar";
 import useUIStore from "../../zustand/useUIStore";
 
@@ -18,13 +18,8 @@ const Sidebar = () => {
         <div className='border-r border-slate-500 p-4 flex flex-col'>
             <ToggleSideBar onToggle={handleToggle} />
             <div className='divider px-3'></div>
-
-            {/* Conditionally render based on selectedTab */}
             {selectedTab === "rooms" ? (
-				<>
-					<AddRoomForm />  
-					<div className='divider px-3'></div>
-				</>
+                    <RoomList />
             ) : (
                 <>
                     <SearchInput />  
@@ -32,7 +27,6 @@ const Sidebar = () => {
                     <Conversations /> 
                 </>
             )}
-
             <LogoutButton />
         </div>
     );
