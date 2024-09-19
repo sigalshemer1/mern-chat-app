@@ -37,6 +37,7 @@ export const setRoom = async (req, res) => {
 	}
 };
 
+
 export const getRoom = async (req, res) => {
 	try {
 		const { id: roomId } = req.params;

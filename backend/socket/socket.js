@@ -24,8 +24,9 @@ export const broadcastRoomUpdate = (room) => {
 };
 
 // Function to broadcast room messages update
-export const broadcastRoomMessagesUpdate = (room) => {
-    io.emit("roomMessagesAdded", room); // Emit the 'roomAdded' event with room data
+export const broadcastRoomMessagesUpdate = (messageRoom) => {
+    console.log("Broadcasting new message:", messageRoom);  // Add this line
+    io.to(messageRoom.roomId).emit("getNewMessagesRoom", messageRoom); // Emit the 'MessageRoomAdded' event with room data
 };
 
 io.on("connection", (socket) => {

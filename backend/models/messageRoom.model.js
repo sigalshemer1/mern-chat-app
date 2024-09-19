@@ -9,14 +9,13 @@ const messageRoomSchema = new mongoose.Schema(
 		},
 		roomId: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "room",
+			ref: "Room", // Corrected reference to Room model
 			required: true,
 		},
 		messageRoom: {
 			type: String,
 			required: true,
 		},
-		// createdAt, updatedAt
 	},
 	{ timestamps: true }
 );
@@ -24,3 +23,4 @@ const messageRoomSchema = new mongoose.Schema(
 const MessageRoom = mongoose.model("MessageRoom", messageRoomSchema);
 
 export default MessageRoom;
+

@@ -8,55 +8,67 @@ export const sendMessageRoom = async (req, res) => {
 		const { id: roomId } = req.params;
 		const senderId = req.user._id;
 
-		let room = await Room.findOne({
-			participants: { $all: [senderId] },
-		});
+		// Find the room by roomId
+		let room = await Room.findById(roomId);
 
 		if (!room) {
-			room = await Room.create({
-				participants: [senderId],
-			});
+			return res.status(404).json({ error: "Room not found" });
 		}
 
+		// Create new messageRoom entry
 		const newMessageRoom = new MessageRoom({
 			senderId,
 			roomId,
 			messageRoom,
 		});
 
-		if (newMessageRoom) {
-			room.messagesRoom.push(newMessageRoom._id);
-		}
+		// Add new messageRoom reference to the room
+		room.messagesRoom.push(newMessageRoom._id);
 
-		// this will run in parallel
+		// Save both room and message in parallel
 		await Promise.all([room.save(), newMessageRoom.save()]);
 
-		// SOCKET IO FUNCTIONALITY To update all users with the new messages of the room
-		broadcastRoomMessagesUpdate(room); 
+		// Broadcast the updated messages via Socket.IO
+		broadcastRoomMessagesUpdate(newMessageRoom);
 
 		res.status(201).json(newMessageRoom);
 	} catch (error) {
-		console.log("Error in sendMessage controller: ", error.message);
+		console.error("Error in sendMessageRoom controller: ", error.message);
 		res.status(500).json({ error: "Internal server error" });
 	}
 };
 
 export const getMessagesRoom = async (req, res) => {
 	try {
-		const { id: userToChatId } = req.params;
-		const senderId = req.user._id;
+		const { id: roomId } = req.params; // Get roomId from params
+		// Find the room and populate messagesRoom and senderId
+		const room = await Room.findById(roomId)
+			.populate({
+				path: 'messagesRoom',
+				populate: { 
+					path: 'senderId', 
+					select: 'username profilePic _id' // Populate senderId to get user details
+				}
+			})
+			.exec();
 
-		const room = await Room.findOne({
-			participants: { $all: [senderId, userToChatId] }, //TO IMPLEMENT TO ALL PARTICIPANTS!!!!
-		}).populate("messages"); // NOT REFERENCE BUT ACTUAL MESSAGES
+		if (!room) return res.status(404).json({ error: 'Room not found' });
 
-		if (!room) return res.status(200).json([]);
-
-		const messages = conversation.messages;
+		// Prepare messages with senderId details
+		const messages = room.messagesRoom.map(message => ({
+            _id: message._id,
+            messageRoom: message.messageRoom,
+            createdAt: message.createdAt,
+            senderId: {
+                _id: message.senderId._id,
+                username: message.senderId.username,
+                profilePic: message.senderId.profilePic
+            }
+        }));
 
 		res.status(200).json(messages);
 	} catch (error) {
-		console.log("Error in getMessages controller: ", error.message);
+		console.error("Error in getMessagesRoom controller: ", error.message);
 		res.status(500).json({ error: "Internal server error" });
 	}
 };

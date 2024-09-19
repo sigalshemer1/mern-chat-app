@@ -15,7 +15,7 @@ const roomSchema = new mongoose.Schema(
 		messagesRoom: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "Message",
+				ref: "MessageRoom",
 				default: [],
 			},
 		],
