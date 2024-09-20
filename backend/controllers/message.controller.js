@@ -17,6 +17,7 @@ export const sendMessage = async (req, res) => {
 				participants: [senderId, receiverId],
 			});
 		}
+		
 
 		const newMessage = new Message({
 			senderId,
@@ -44,7 +45,6 @@ export const sendMessage = async (req, res) => {
 		res.status(500).json({ error: "Internal server error" });
 	}
 };
-
 
 export const getMessages = async (req, res) => {
 	try {

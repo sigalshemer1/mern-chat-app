@@ -27,7 +27,6 @@ export const setRoom = async (req, res) => {
 		}
 
 		await room.save();
-
 		broadcastRoomUpdate(room); //Socket.io - refresh the list of rooms
 
 		res.status(201).json(room);
@@ -36,7 +35,6 @@ export const setRoom = async (req, res) => {
 		res.status(500).json({ error: "Internal server error" });
 	}
 };
-
 
 export const getRoom = async (req, res) => {
 	try {

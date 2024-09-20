@@ -1,15 +1,14 @@
 import { useAuthContext } from "../../context/AuthContext";
 import { extractTime } from "../../utils/extractTime";
+import useRoom from "../../zustand/useRoom";
 
 const MessageRoom = ({ message }) => {
-
 	const { authUser } = useAuthContext();
-	// Ensure messageRoom and authUser are defined
-	if (!message || !authUser) {
-		return null;
-	}
+
+	const { selectedRoom } = useRoom();
+	console.log("SELECTED ROOM - " , JSON.stringify(selectedRoom));
 	const theSender = message.senderId;
-	const fromMe = message.senderId._id === authUser._id;
+	const fromMe = theSender._id === authUser._id;
 	const formattedTime = extractTime(message.createdAt);
 	const chatClassName = fromMe ? "chat-end" : "chat-start";
 	const bubbleBgColor = fromMe ? "bg-blue-500" : "";

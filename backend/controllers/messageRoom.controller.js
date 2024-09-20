@@ -22,12 +22,14 @@ export const sendMessageRoom = async (req, res) => {
 			messageRoom,
 		});
 
-		// Add new messageRoom reference to the room
+        await Room.updateOne(
+            { _id: roomId }, // Filter: room to update
+            { $addToSet: { participants: senderId } } // Ensure uniqueness in participants
+        );
+        
 		room.messagesRoom.push(newMessageRoom._id);
-
-		// Save both room and message in parallel
+		
 		await Promise.all([room.save(), newMessageRoom.save()]);
-
 		// Broadcast the updated messages via Socket.IO
 		broadcastRoomMessagesUpdate(newMessageRoom);
 

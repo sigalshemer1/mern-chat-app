@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import http from "http";
 import express from "express";
 
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -17,7 +18,7 @@ const userSocketMap = {}; // {userId: socketId}
 export const getReceiverSocketId = (receiverId) => {
     return userSocketMap[receiverId];
 };
-
+ 
 // Function to broadcast room updates
 export const broadcastRoomUpdate = (room) => {
     io.emit("roomAdded", room); // Emit the 'roomAdded' event with room data
@@ -25,8 +26,7 @@ export const broadcastRoomUpdate = (room) => {
 
 // Function to broadcast room messages update
 export const broadcastRoomMessagesUpdate = (messageRoom) => {
-    console.log("Broadcasting new message:", messageRoom);  // Add this line
-    io.to(messageRoom.roomId).emit("getNewMessagesRoom", messageRoom); // Emit the 'MessageRoomAdded' event with room data
+    io.emit("newMessagesRoom", messageRoom);
 };
 
 io.on("connection", (socket) => {

@@ -3,27 +3,29 @@ import useGetRooms from "../../hooks/useGetRooms";
 import { getRandomEmoji } from "../../utils/emojis";
 import Room from "./Room";
 import AddRoom from "./AddRoom";
-import io from 'socket.io-client';
-
-const socket = io('http://localhost:5000'); // The server URL
+import { useSocketContext } from '../../context/SocketContext';
 
 const RoomList = () => {
     const { loading, rooms: initialRooms } = useGetRooms();
     const [rooms, setRooms] = useState(initialRooms);
+    
+    const { socket } = useSocketContext();
 
     useEffect(() => {
         setRooms(initialRooms);
     }, [initialRooms]);
 
     useEffect(() => {
-        socket.on('roomAdded', (newRoom) => {
-            setRooms((prevRooms) => [...prevRooms, newRoom]);
-        });
-    
-        return () => {
-            socket.off('roomAdded');
-        };
-    }, []);
+        if (socket) {
+            socket.on('roomAdded', (newRoom) => {
+                setRooms((prevRooms) => [...prevRooms, newRoom]);
+            });
+
+            return () => {
+                socket.off('roomAdded');
+            };
+        }
+    }, [socket]);
 
     const handleRoomAdded = (newRoom) => {
         // Optionally handle local room addition if needed
