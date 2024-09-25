@@ -1,4 +1,5 @@
 import Room from "../models/room.model.js";
+import User from "../models/user.model.js";
 import MessageRoom from "../models/messageRoom.model.js";
 import { broadcastRoomMessagesUpdate, io } from "../socket/socket.js";
 
@@ -10,9 +11,14 @@ export const sendMessageRoom = async (req, res) => {
 
 		// Find the room by roomId
 		let room = await Room.findById(roomId);
+		let sender = await User.findById(senderId);
 
 		if (!room) {
 			return res.status(404).json({ error: "Room not found" });
+		}
+
+		if (!sender) {
+			return res.status(404).json({ error: "User not found" });
 		}
 
 		// Create new messageRoom entry
@@ -28,10 +34,10 @@ export const sendMessageRoom = async (req, res) => {
         );
         
 		room.messagesRoom.push(newMessageRoom._id);
-		
+
 		await Promise.all([room.save(), newMessageRoom.save()]);
 		// Broadcast the updated messages via Socket.IO
-		broadcastRoomMessagesUpdate(newMessageRoom);
+		broadcastRoomMessagesUpdate({newMessageRoom,sender});
 
 		res.status(201).json(newMessageRoom);
 	} catch (error) {

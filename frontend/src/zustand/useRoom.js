@@ -5,6 +5,8 @@ const useRoom = create((set) => ({
   setSelectedRoom: (selectedRoom) => set({ selectedRoom }),
   messagesRoom: [],
   setMessagesRoom: (messagesRoom) => set({ messagesRoom }),
+  sender: [],
+  setSender: (sender) => set({ sender }),
 }));
 
 export default useRoom;

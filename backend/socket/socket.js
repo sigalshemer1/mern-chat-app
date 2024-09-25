@@ -12,6 +12,7 @@ const io = new Server(server, {
     },
 });
 
+
 const userSocketMap = {}; // {userId: socketId}
 
 // Function to get the socket ID for a specific user
@@ -25,8 +26,8 @@ export const broadcastRoomUpdate = (room) => {
 };
 
 // Function to broadcast room messages update
-export const broadcastRoomMessagesUpdate = (messageRoom) => {
-    io.emit("newMessagesRoom", messageRoom);
+export const broadcastRoomMessagesUpdate = (messageRoom,sender) => {
+    io.emit("newMessagesRoom", {messageRoom,sender});
 };
 
 io.on("connection", (socket) => {

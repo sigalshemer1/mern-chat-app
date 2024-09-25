@@ -1,23 +1,61 @@
 import { useEffect } from "react";
-import useRoom from "../zustand/useRoom";
+import useRoom from "../zustand/useRoom"; // Zustand store
 import notificationSound from "../assets/sounds/notification.mp3";
-import io from 'socket.io-client';
-const socket1 = io('http://localhost:5000'); // The server URL
+import { useSocketContext } from '../context/SocketContext';
 
 const useListenMessagesRoom = () => {
+    const { socket } = useSocketContext();
     const { messagesRoom, setMessagesRoom } = useRoom();
-	useEffect(() => {
-        socket1.on('newMessagesRoom', (newMessageRoom) => {
-			newMessageRoom.shouldShake = true;
-			const sound = new Audio(notificationSound);
-			sound.play();
-            setMessagesRoom((prevMessagesRoom) => [...prevMessagesRoom, newMessageRoom]);
+
+    useEffect(() => {
+        socket?.on('newMessagesRoom', (newMessageRoom) => {
+            console.log("Received message IN LISTNER: ", newMessageRoom);
+            
+            if (newMessageRoom) {
+                newMessageRoom.shouldShake = true;
+                const sound = new Audio(notificationSound);
+                sound.play();
+
+                // Append new message to Zustand's messagesRoom state
+                setMessagesRoom((prevMessages) => [...prevMessages, newMessageRoom]);
+            }
         });
-    
+
         return () => {
-            socket1.off('newMessagesRoom');
+            socket?.off('newMessagesRoom');
         };
-    }, [socket1, setMessagesRoom, messagesRoom]);
+    }, [socket, setMessagesRoom]);
+
+    return { messagesRoom }; // No need to return sender, it's handled in Zustand now
 };
 
 export default useListenMessagesRoom;
+
+
+
+
+
+// import { useEffect } from "react";
+// import useRoom from "../zustand/useRoom";
+// import notificationSound from "../assets/sounds/notification.mp3";
+// import { useSocketContext } from '../context/SocketContext';
+
+// const useListenMessagesRoom = () => {
+//     const { socket } = useSocketContext();
+//     const { messagesRoom, setMessagesRoom } = useRoom();
+// 	useEffect(() => {
+//         socket?.on('newMessagesRoom', (newMessageRoom,sender) => {
+//             console.log("inside read socket SENDER = " + JSON.stringify(sender));
+// 			newMessageRoom.shouldShake = true;
+// 			const sound = new Audio(notificationSound);
+// 			sound.play();
+//             setMessagesRoom((prevMessagesRoom) => [...prevMessagesRoom, newMessageRoom]);
+//         });
+    
+//         return () => {
+//             socket.off('newMessagesRoom');
+//         };
+//     }, [socket, setMessagesRoom, messagesRoom]);
+// };
+
+// export default useListenMessagesRoom;

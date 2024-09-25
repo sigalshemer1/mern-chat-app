@@ -4,7 +4,7 @@ const Room = ({ room, lastIdx ,emoji}) => {
 	const { selectedRoom, setSelectedRoom } = useRoom();
 
 	const isSelected = selectedRoom?._id === room._id;
-
+	
 	return (
 		<>
 			<div

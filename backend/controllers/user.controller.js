@@ -12,3 +12,16 @@ export const getUsersForSidebar = async (req, res) => {
 		res.status(500).json({ error: "Internal server error" });
 	}
 };
+
+export const getUserForRoom= async (req, res) => {
+	try {
+		const { id: userId } = req.params;
+
+		const newUser = await User.find({ _id: userId });
+
+		res.status(200).json(newUser);
+	} catch (error) {
+		console.error("Error in getUsersForSidebar: ", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};

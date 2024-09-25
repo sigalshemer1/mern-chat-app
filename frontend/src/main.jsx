@@ -5,23 +5,14 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
 import { SocketContextProvider } from "./context/SocketContext.jsx";
-import  SocketMessagesRoomProvider from "./context/SocketMessagesRoom.jsx"; // Corrected import for default export
-import useUIStore from "./zustand/useUIStore"; // Ensure this path is correct
 
 const Root = () => {
-    const { selectedTab } = useUIStore(); // Call the hook inside the component
     return (
         <React.StrictMode>
             <BrowserRouter>
                 <AuthContextProvider>
                     <SocketContextProvider>
-                    {selectedTab === "rooms" ? (
-                        <SocketMessagesRoomProvider>
-                            <App />
-                        </SocketMessagesRoomProvider>
-                    ) : (
-                            <App />
-                    )}
+                            <App />     
                     </SocketContextProvider>
                 </AuthContextProvider>
             </BrowserRouter>

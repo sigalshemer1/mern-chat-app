@@ -22,9 +22,10 @@ const useGetRooms = () => {
 			}
 		};
 
+
 		getRooms();
 	}, []);
 
-	return { loading, rooms };
+	return { loading, rooms};
 };
 export default useGetRooms;

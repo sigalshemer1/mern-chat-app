@@ -15,10 +15,9 @@ const MessageContainer = () => {
 	const { selectedTab } = useUIStore(); 
 
     useEffect(() => {
-        // Clean up the selected conversation when unmounting
         return () => {
             setSelectedConversation(null);
-            setSelectedRoom(null); // Optionally clear the room too
+            setSelectedRoom(null); 
         };
     }, [setSelectedConversation, setSelectedRoom]);
 
