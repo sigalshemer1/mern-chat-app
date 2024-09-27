@@ -1,7 +1,6 @@
 import { useAuthContext } from "../../context/AuthContext";
 import { extractTime } from "../../utils/extractTime";
 import { useEffect, useState } from "react";
-import useRoom from "../../zustand/useRoom";
 
 const MessageRoom = ({ message}) => {
   const [isNew, setIsNew] = useState(null); // Initially null (loading state)
