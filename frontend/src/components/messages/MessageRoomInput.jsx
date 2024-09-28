@@ -10,13 +10,7 @@ const MessageRoomInput = ({ selectedRoom, dispatch }) => { // Ensure selectedRoo
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!messageRoom.trim()) return;
-
     const newMessage = await sendMessageRoom(messageRoom, selectedRoom); // Pass selectedRoom to the hook
-
-    if (newMessage) {
-      dispatch({ type: ACTIONS.ADD_MSG, payload: { msg: newMessage } }); // Add new message to state
-    }
-    
     setMessageRoom(""); // Clear the input field
   };
 

@@ -8,6 +8,8 @@ export const sendMessageRoom = async (req, res) => {
 		const { messageRoom } = req.body;
 		const { id: roomId } = req.params;
 		const senderId = req.user._id;
+		const fullname = req.user.fullname;
+		const profilePic = req.user.profilePic;
 
 		// Find the room by roomId
 		let room = await Room.findById(roomId);
@@ -26,6 +28,8 @@ export const sendMessageRoom = async (req, res) => {
 			senderId,
 			roomId,
 			messageRoom,
+			fullname,
+			profilePic
 		});
 
         await Room.updateOne(

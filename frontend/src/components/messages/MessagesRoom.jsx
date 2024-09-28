@@ -10,13 +10,19 @@ export const ACTIONS = {
   ADD_MSG: 'add-msg'
 };
 
+
 function reducer(msgs, action) {
-  console.log("IN REDUCER = " + JSON.stringify(action))
   switch (action.type) {
     case ACTIONS.SET_INITIAL_MSGS:
+      if (!Array.isArray(action.payload.initialMessages)) {
+        console.error("initialMessages is not an array:", action.payload.initialMessages);
+        return msgs; // Return current state if data is invalid
+      }
       return [...action.payload.initialMessages];
+
     case ACTIONS.ADD_MSG:
       return [...msgs, newMsg(action.payload.msg)];
+
     default:
       return msgs;
   }
@@ -37,12 +43,14 @@ const MessagesRoom = ({ selectedRoom }) => {
 
   // Sync fetched messages to the local state via the reducer
   useEffect(() => {
-    if (initialMessages.length > 0) {
-      dispatch({ type: ACTIONS.SET_INITIAL_MSGS, payload: {  initialMessages } });
+    if (Array.isArray(initialMessages) && initialMessages.length > 0) {
+      dispatch({ type: ACTIONS.SET_INITIAL_MSGS, payload: { initialMessages } });
+    } else {
+      console.error("initialMessages is not an array or empty: ", initialMessages);
     }
   }, [initialMessages]);
 
-  useListenMessagesRoom(); //Listen to new messages
+  useListenMessagesRoom(dispatch); // Pass dispatch to the listener
 
   // Scroll to the last message when messages change
   useEffect(() => {
@@ -53,8 +61,8 @@ const MessagesRoom = ({ selectedRoom }) => {
     }
   }, [msgs]);
 
-
   return (
+    <>
     <div className="px-4 flex-1 overflow-auto">
       {!loading && msgs.length > 0 &&
         msgs.map((message) => (
@@ -63,12 +71,10 @@ const MessagesRoom = ({ selectedRoom }) => {
           </div>
         ))
       }
-
       {loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
-      
-      {/* Ensure that selectedRoom is passed to MessageRoomInput */}
-      <MessageRoomInput selectedRoom={selectedRoom} dispatch={dispatch} />
     </div>
+    <MessageRoomInput selectedRoom={selectedRoom} dispatch={dispatch} />
+    </>
   );
 };
 

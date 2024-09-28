@@ -14,12 +14,17 @@ const useGetMessagesRoom = (selectedRoom) => {
         // Fetch messages for the selected room
         const res = await fetch(`/api/messageRoom/${selectedRoom._id}`);
         const data = await res.json();
-        if (data.error) throw new Error(data.error);
         
-        // Update the local state with fetched messages
-        setMessagesRoom(data);
+        // Check if data is an array, if not set it to an empty array
+        if (!Array.isArray(data)) {
+          console.error("Expected an array of messages, but received:", data);
+          setMessagesRoom([]); // Fallback to an empty array
+        } else {
+          // Update the local state with fetched messages
+          setMessagesRoom(data);
+        }
       } catch (error) {
-        toast.error(error.message);
+        toast.error(error.message || "Failed to load messages.");
       } finally {
         setLoading(false);
       }
@@ -29,7 +34,7 @@ const useGetMessagesRoom = (selectedRoom) => {
   }, [selectedRoom?._id]);
 
   // Determine if there are messages
-  const hasMessages = messagesRoom && messagesRoom.length > 0;
+  const hasMessages = messagesRoom.length > 0;
 
   return { messagesRoom, loading, hasMessages, setMessagesRoom };
 };

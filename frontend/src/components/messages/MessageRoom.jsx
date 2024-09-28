@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 const MessageRoom = ({ message}) => {
   const [isNew, setIsNew] = useState(null); // Initially null (loading state)
-  
   // UseEffect to determine if the message is new or existing
   useEffect(() => {
     if ('senderId' in message) {
@@ -25,7 +24,6 @@ const MessageRoom = ({ message}) => {
 
 //   console.log("IS NEW?  " + isNew);
   if (isNew===true) {
-	console.log("Received message in Room: ", message);
     theSender = message.messageRoom.sender;
 	theMsg = message.messageRoom.newMessageRoom;
     theSenderId = theMsg.senderId;
@@ -46,7 +44,8 @@ const MessageRoom = ({ message}) => {
   const chatClassName = fromMe ? "chat-end" : "chat-start";
   const bubbleBgColor = fromMe ? "bg-blue-500" : "";
   const profilePic = fromMe ? authUser.profilePic : theSender?.profilePic;
-  const shakeClass = theMsg.shouldShake ? "shake" : "";
+  console.log("THE MSG IN MESSAGEROOM = ", theMsg)
+  const shakeClass = isNew && !fromMe ? "shake" : "";
 
   return (
     <div>
