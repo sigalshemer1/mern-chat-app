@@ -4,6 +4,9 @@ import react from "@vitejs/plugin-react";
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [react()],
+	css: {
+		postcss: './postcss.config.js',
+	  },
 	test: {
 		globals: true,
 		environment: 'jsdom',
@@ -13,7 +16,8 @@ export default defineConfig({
 		port: 3000,
 		proxy: {
 			"/api": {
-				target: "http://localhost:5000",
+				target: "http://backend:5000",
+				//target: "http://localhost:5000",
 			},
 		},
 	},
